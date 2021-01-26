@@ -2,7 +2,7 @@ const http = require('http');
 const fibonachhi = require('./fibonachhi');
 const { Worker } = require('worker_threads');
 
-const server = http.createServer((request, response) => {
+const server = http.createServer(async (request, response) => {
 
     /**
      * Calculates 45th number of the Fibonachhi Sequence with main thread.
@@ -21,27 +21,10 @@ const server = http.createServer((request, response) => {
      */
     } else if (request.url == '/fibonachhiasync') {
 
-        const worker = new Worker(__dirname + '/worker.js', {
-            workerData: { number: 45 },
-        });
+        const fibonachhiNumber = await fibonachhiAsync(45);
 
-        worker.on('message', (result) => {
-            console.log('Thread worker successfully calcuated the 45th number of the fibonachhi series.');
-            const fibonachhiNumber = result;
-            response.write(`Fibonacchi for 45: ${fibonachhiNumber}`);
-            response.end();
-        });
-
-        worker.on('error', () => {
-            console.log('There was some error while calculating 45th number of fibonachhi series through thread worker.');
-            response.writeHead(500);
-            response.write(`Could not calculate the 45th number fibonachhi series.`);
-            response.end();
-        });
-
-        worker.on("exit", code  => {
-            console.log('Thread worker terminated.')
-        });
+        response.write(`Fibonacchi for 45: ${fibonachhiNumber}`);
+        response.end();
 
     } else {
         response.write("Hello World");
@@ -53,3 +36,35 @@ const server = http.createServer((request, response) => {
 server.listen(5000, () => {
     console.log('server running at port : 5000');
 })
+
+
+
+/**
+ * Uses the thread workers manually to calculate the nth term of the Fibonachhi sequence.
+ * @param {*} number 
+ */
+const fibonachhiAsync = (number) => {
+
+    return new Promise( (resolve, reject) => {
+
+        const worker = new Worker(__dirname + '/fibonachhiWorker.js', {
+            workerData: { number: number },
+        });
+
+        worker.on('message', (result) => {
+            console.log('Thread worker calcuated the 45th number of the fibonachhi series.');
+            const fibonachhiNumber = result;
+            resolve(fibonachhiNumber);
+        });
+
+        worker.on('error', () => {
+            console.log('There was some error while calculating 45th number of fibonachhi series through thread worker.');
+            reject();
+        });
+    
+        worker.on("exit", code  => {
+            console.log('Thread worker terminated.')
+        });
+
+    });
+}
