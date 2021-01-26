@@ -28,7 +28,9 @@
         was fired first.   
 
     Even though it takes about few milliseconds to get result for Hello World API, we have to wait about 
-    20 seconds to get the result.
+    20 seconds to get the result.   
+
+    So its not wise to use Node for CPU intensive tasks.
 
 ### What this program does
 
@@ -42,4 +44,12 @@
     So, if I fire this new Fibonacchi API and immediately after that fire the Hello World API, then: 
         We get the response for Hello World API immediately even though it was fired later. This is 
         because the main thread is not blocked. We get the Fibonachhi result after 20 seconds just like 
-        the first API.
+        the first API.   
+
+### Test the program
+
+    1. Clone the repository.   
+    2. Install the dependencies (which is only nodemon.).   
+        `npm install`   
+    3. Start the server.   
+        `npm run dev` OR `npm start`
