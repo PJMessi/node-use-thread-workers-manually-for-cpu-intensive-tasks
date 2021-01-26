@@ -21,7 +21,7 @@ const server = http.createServer(async (request, response) => {
      */
     } else if (request.url == '/fibonachhiasync') {
 
-        const fibonachhiNumber = fibonachhiAsync(45);
+        const fibonachhiNumber = await fibonachhiAsync(45);
 
         response.write(`Fibonacchi for 45: ${fibonachhiNumber}`);
         response.end();
