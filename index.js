@@ -21,7 +21,7 @@ const server = http.createServer(async (request, response) => {
      */
     } else if (request.url == '/fibonachhiasync') {
 
-        const fibonachhiNumber = await fibonachhiAsync(45);
+        const fibonachhiNumber = fibonachhiAsync(45);
 
         response.write(`Fibonacchi for 45: ${fibonachhiNumber}`);
         response.end();
@@ -43,7 +43,7 @@ server.listen(5000, () => {
  * Uses the thread workers manually to calculate the nth term of the Fibonachhi sequence.
  * @param {*} number 
  */
-const fibonachhiAsync = (number) => {
+const fibonachhiAsync = async (number) => {
 
     return new Promise( (resolve, reject) => {
 
